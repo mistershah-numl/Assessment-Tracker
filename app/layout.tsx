@@ -3,8 +3,8 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Lead Better',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  description: 'Created with ❤️',
+  generator: 'MisterShah',
 }
 
 export default function RootLayout({
