@@ -1,6 +1,7 @@
 # Assessment Tracker
 
-![L.E.A.D.Better 360 Homepage](https://sjc.microlink.io/leadbetter-delta.vercel.app)
+![L.E.A.D.Better 360 Homepage](https://api.microlink.io?url=https://leadbetter-delta.vercel.app/&screenshot=true&embed=screenshot.url)
+
 
 **Assessment Tracker** is a powerful and interactive performance evaluation tool designed to facilitate 360-degree feedback and team assessments in a corporate or organizational setting. This application enables managers, team members, and HR to collaborate on leadership assessments, coaching plans, and continuous improvement in a user-centric and data-informed environment.
 
