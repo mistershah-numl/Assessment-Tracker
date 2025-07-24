@@ -1,58 +1,81 @@
 # Assessment Tracker
 
-![Assignment Tracker Homepage](https://vercel.com/api/www/avatar/mistershah-numl) <!-- Optional: Replace with a screenshot of your app if available -->
+![L.E.A.D.Better 360 Homepage](https://sjc.microlink.io/leadbetter-delta.vercel.app)
 
-Welcome to **L.E.A.D.Better 360 – Assessment Tracker**, a modern web application designed to streamline employee assessments, performance tracking, and leadership development workflows within organizations. Built using the latest technologies, the application delivers a seamless, responsive, and intuitive user experience for managers and employees alike.
+**Assessment Tracker** is a powerful and interactive performance evaluation tool designed to facilitate 360-degree feedback and team assessments in a corporate or organizational setting. This application enables managers, team members, and HR to collaborate on leadership assessments, coaching plans, and continuous improvement in a user-centric and data-informed environment.
 
-## 🚀 Live Demo
+## 🌐 Live Demo
 
-Check out the deployed application here:  
-👉 **[https://leadbetter-delta.vercel.app](https://leadbetter-delta.vercel.app)**
+Experience the full application at:  
+👉 [https://leadbetter-delta.vercel.app/](https://leadbetter-delta.vercel.app/)
 
 ---
 
 ## ✨ Features
 
-- **Role-Based Dashboards:** Tailored interfaces for managers and employees with distinct navigation, data access, and tools.
-- **Assessment Creation:** Create, edit, and manage performance assessments using interactive modal dialogs.
-- **Development Plan Management:** Tools to define and monitor employee development plans over time.
-- **Matrix Visualization:** Visual tools to assess employee position across various performance metrics.
-- **Email Integration:** Send assessment-related emails directly through the platform using structured prompts.
-- **Privacy and Security Pages:** Legal and informational pages for transparency and trust.
-- **Responsive Design:** Fully optimized for mobile, tablet, and desktop experiences.
+- **Role-Based Pages**  
+  Distinct pages and dashboards tailored for Admins, Managers, and Team Members, each with access to specific features and tools.
+
+- **360-Degree Feedback Flow**  
+  Structured workflows to rate colleagues using dynamic matrices, rate leadership behaviors, and provide coaching or development suggestions.
+
+- **Team & Assessment Management**  
+  Create, edit, and view teams and assessments. Assign members, define roles, and track feedback rounds easily.
+
+- **Modern UI with Theme Support**  
+  A clean, minimal, and highly responsive interface powered by Tailwind CSS and ShadCN UI, supporting dark/light themes.
+
+- **Dialog-Based Interaction**  
+  All critical actions—such as creating assessments, editing team data, scheduling coaching sessions, and sending feedback—are implemented with elegant modal dialogs.
+
+- **Matrix Visualization**  
+  Beautiful matrix-style component for visualizing ratings across multiple team members and leadership dimensions.
+
+- **Email Integration UI**  
+  Interfaces to send follow-up or feedback-related emails directly from the app.
+
+- **Mobile Responsive**  
+  Fully responsive layout that works seamlessly on desktop, tablet, and mobile screens.
 
 ---
 
-## 🧪 Technologies Used
+## 🛠 Technologies Used
 
-- **Next.js 15 (App Router):** Cutting-edge React framework for building scalable and performant web applications.
-- **React 19:** For robust and interactive component-based UI.
-- **Tailwind CSS:** Utility-first styling framework for fast and consistent design.
-- **shadcn/ui:** Accessible and elegant UI components built with Radix UI and Tailwind CSS.
-- **Lucide Icons:** A modern icon set built for React applications.
-- **pnpm:** Fast, disk space-efficient package manager used to handle dependencies.
+- **Next.js 15 (App Router)** – Server components, layouts, and routing
+- **React 19** – Component-based architecture
+- **Tailwind CSS** – Utility-first styling with custom themes
+- **shadcn/ui** – Component library built on Radix UI
+- **Lucide Icons** – Consistent and clean SVG icons
+- **TypeScript** – For type safety and developer experience
+- **Vercel** – Seamless deployment and hosting
 
 ---
 
-## 🛠️ Getting Started
+## 📁 Project Structure Overview
 
-Follow these steps to get the project running locally:
+- `app/` – Contains route-based logic for login, dashboards, public pages, etc.
+- `components/` – UI and feature-specific reusable components
+- `hooks/` – Custom React hooks for utilities like toast and mobile checks
+- `lib/` – Helper functions for data processing and exports
+- `public/` – Static assets (images, icons)
+- `styles/` – Global and component-based CSS
+- `tailwind.config.ts` – Tailwind customization
+- `tsconfig.json` – TypeScript configuration
 
-### ✅ Prerequisites
+---
 
-- Node.js (v18.x or newer)
-- pnpm (recommended) or npm/yarn
+## 🚀 Getting Started
 
-### 📦 Installation
+To run this project locally, follow these instructions:
 
-```bash
-git clone https://github.com/mistershah-numl/Assessment-Tracker.git
-cd Assessment-Tracker
+### Prerequisites
 
-# Install dependencies using pnpm (recommended)
-pnpm install
+- Node.js (v18+ recommended)
+- pnpm, npm, or yarn (we use `pnpm` in this project)
 
-# or use npm/yarn
-npm install
-# or
-yarn install
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/mistershah-numl/Assessment-Tracker.git
+   cd Assessment-Tracker
