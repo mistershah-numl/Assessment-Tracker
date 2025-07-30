@@ -1,10 +1,11 @@
+
 "use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -19,6 +20,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Clock,
+  Menu,
+  X,
 } from "lucide-react"
 import Link from "next/link"
 import { MatrixVisualization } from "@/components/matrix-visualization"
@@ -121,23 +124,26 @@ const initialTeams: Team[] = [
 
 export default function AdminDashboard() {
   const [selectedTab, setSelectedTab] = useState("assessments")
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [assessments, setAssessments] = useState<Assessment[]>(initialAssessments)
   const [teams, setTeams] = useState<Team[]>(initialTeams)
 
-  // Dialog states for assessments
+  // Dialog states
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false)
   const [isDevelopmentPlanDialogOpen, setIsDevelopmentPlanDialogOpen] = useState(false)
   const [isCoachingSessionDialogOpen, setIsCoachingSessionDialogOpen] = useState(false)
   const [isCreateAssessmentDialogOpen, setIsCreateAssessmentDialogOpen] = useState(false)
-  const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null)
-
-  // Dialog states for teams
   const [isViewTeamDialogOpen, setIsViewTeamDialogOpen] = useState(false)
   const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(false)
   const [isCreateTeamDialogOpen, setIsCreateTeamDialogOpen] = useState(false)
+  const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null)
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
+
+  // Menu toggle handlers
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const closeMenu = () => setIsMenuOpen(false)
 
   // Assessment action handlers
   const handleViewAssessment = (assessment: Assessment) => {
@@ -268,142 +274,189 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[#F3EDDB]/20">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b shadow-sm">
-        <div className="px-6 py-4">
+      <header className="bg-white/90 backdrop-blur-lg border-b shadow-sm sticky top-0 z-50">
+        <div className="px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center space-x-3 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#201C50] to-[#EDA820] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                  <span className="text-white font-bold">L</span>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Link href="/" className="flex items-center space-x-2 group">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 bg-gradient-to-br from-[#201C50] to-[#EDA820] rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
+                  <span className="text-white font-bold text-sm sm:text-base">L</span>
                 </div>
-                <span className="font-bold text-xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
-                  L.E.A.D.Better 360
+                <span className="font-bold text-base sm:text-lg bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
+                  LEAD Better
                 </span>
               </Link>
-              <Badge className="bg-gradient-to-r from-[#201C50] to-[#80967D] text-white px-4 py-2 shadow-lg">
-                <Users className="w-4 h-4 mr-2" />
+              <Badge className="bg-gradient-to-r from-[#201C50] to-[#80967D] text-white px-2 sm:px-3 py-0.5 text-xs sm:text-sm">
+                <Users className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                 Administrator
               </Badge>
             </div>
-            <div className="flex items-center space-x-4">
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center space-x-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-transparent"
+                className="text-xs sm:text-sm hover:bg-gray-100"
                 onClick={handleExportReports}
               >
-                <Download className="w-4 h-4 mr-2" />
-                Export All
+                <Download className="w-4 h-4 mr-1 sm:mr-2" />
+                Export
               </Button>
               <Button
-                className="bg-gradient-to-r from-[#EDA820] to-[#EC5A29] hover:from-[#EDA820]/90 hover:to-[#EC5A29]/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                size="sm"
+                className="bg-gradient-to-r from-[#EDA820] to-[#EC5A29] hover:from-[#EDA820]/90 hover:to-[#EC5A29]/90 text-xs sm:text-sm"
                 onClick={() => setIsCreateAssessmentDialogOpen(true)}
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-4 h-4 mr-1 sm:mr-2" />
                 New Assessment
               </Button>
             </div>
+            {/* Mobile Menu Button */}
+            <button className="md:hidden text-[#201C50]" onClick={toggleMenu}>
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="p-6">
+      {/* Mobile Sidebar Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={closeMenu}>
+          <div
+            className="fixed top-0 right-0 w-3/4 max-w-sm bg-white/95 shadow-2xl h-full p-4 overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-end mb-4">
+              <button onClick={closeMenu} className="text-[#201C50]">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <div className="flex flex-col gap-2">
+                {["assessments", "teams", "matrix", "settings"].map((tab) => (
+                  <Button
+                    key={tab}
+                    variant={selectedTab === tab ? "default" : "ghost"}
+                    className={`w-full py-2 px-3 text-left rounded-lg text-sm font-medium ${selectedTab === tab
+                      ? "bg-gradient-to-r from-[#201C50] to-[#80967D] text-white"
+                      : "text-[#201C50] hover:bg-gray-100/50"
+                      }`}
+                    onClick={() => {
+                      setSelectedTab(tab)
+                      closeMenu()
+                    }}
+                  >
+                    {tab === "matrix" ? "Matrix View" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </Button>
+                ))}
+              </div>
+              <div className="border-t border-gray-200 pt-4">
+                <Button
+                  variant="outline"
+                  className="w-full text-[#201C50] hover:bg-[#201C50] hover:text-white text-sm py-2"
+                  onClick={() => {
+                    handleExportReports()
+                    closeMenu()
+                  }}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Export All
+                </Button>
+                <Button
+                  className="w-full bg-gradient-to-r from-[#EDA820] to-[#EC5A29] hover:from-[#EDA820]/90 hover:to-[#EC5A29]/90 text-sm py-2 mt-2"
+                  onClick={() => {
+                    setIsCreateAssessmentDialogOpen(true)
+                    closeMenu()
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Assessment
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-blue-50/50 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-blue-50/50 hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Assessments</CardTitle>
-              <div className="w-10 h-10 bg-gradient-to-br from-[#201C50] to-[#80967D] rounded-xl flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-white" />
+              <CardTitle className="text-xs sm:text-sm font-medium text-gray-600">Total Assessments</CardTitle>
+              <div className="w-8 h-8 bg-gradient-to-br from-[#201C50] to-[#80967D] rounded-lg flex items-center justify-center">
+                <BarChart3 className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-[#201C50] mb-1">{totalAssessments}</div>
-              <p className="text-xs text-green-600 font-medium flex items-center">
+              <div className="text-xl sm:text-2xl font-bold text-[#201C50]">{totalAssessments}</div>
+              <p className="text-xs text-green-600 font-medium flex items-center mt-1">
                 <TrendingUp className="w-3 h-3 mr-1" />
                 {activeAssessments} active
               </p>
             </CardContent>
           </Card>
-
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-pink-50/50 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-pink-50/50 hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Active Assessments</CardTitle>
-              <div className="w-10 h-10 bg-gradient-to-br from-[#F2789D] to-[#EC5A29] rounded-xl flex items-center justify-center">
-                <Clock className="h-5 w-5 text-white" />
+              <CardTitle className="text-xs sm:text-sm font-medium text-gray-600">Active Assessments</CardTitle>
+              <div className="w-8 h-8 bg-gradient-to-br from-[#F2789D] to-[#EC5A29] rounded-lg flex items-center justify-center">
+                <Clock className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-[#F2789D] mb-1">{activeAssessments}</div>
-              <p className="text-xs text-orange-600 font-medium">
+              <div className="text-xl sm:text-2xl font-bold text-[#F2789D]">{activeAssessments}</div>
+              <p className="text-xs text-orange-600 font-medium mt-1">
                 {assessments.filter((a) => a.daysRemaining <= 7 && a.daysRemaining > 0).length} closing this week
               </p>
             </CardContent>
           </Card>
-
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-green-50/50 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-green-50/50 hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Completion Rate</CardTitle>
-              <div className="w-10 h-10 bg-gradient-to-br from-[#80967D] to-[#201C50] rounded-xl flex items-center justify-center">
-                <CheckCircle2 className="h-5 w-5 text-white" />
+              <CardTitle className="text-xs sm:text-sm font-medium text-gray-600">Completion Rate</CardTitle>
+              <div className="w-8 h-8 bg-gradient-to-br from-[#80967D] to-[#201C50] rounded-lg flex items-center justify-center">
+                <CheckCircle2 className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-[#80967D] mb-1">{completionRate}%</div>
-              <p className="text-xs text-green-600 font-medium">Above target of 85%</p>
+              <div className="text-xl sm:text-2xl font-bold text-[#80967D]">{completionRate}%</div>
+              <p className="text-xs text-green-600 font-medium mt-1">Above target of 85%</p>
             </CardContent>
           </Card>
-
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-red-50/50 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-red-50/50 hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">High Risk Leaders</CardTitle>
-              <div className="w-10 h-10 bg-gradient-to-br from-[#EC5A29] to-red-600 rounded-xl flex items-center justify-center">
-                <AlertTriangle className="h-5 w-5 text-white" />
+              <CardTitle className="text-xs sm:text-sm font-medium text-gray-600">High Risk Leaders</CardTitle>
+              <div className="w-8 h-8 bg-gradient-to-br from-[#EC5A29] to-red-600 rounded-lg flex items-center justify-center">
+                <AlertTriangle className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-[#EC5A29] mb-1">{highRiskLeaders}</div>
-              <p className="text-xs text-red-600 font-medium">Require immediate attention</p>
+              <div className="text-xl sm:text-2xl font-bold text-[#EC5A29]">{highRiskLeaders}</div>
+              <p className="text-xs text-red-600 font-medium mt-1">Require immediate attention</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content */}
-        <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm shadow-lg rounded-xl p-1">
-            <TabsTrigger
-              value="assessments"
-              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#201C50] data-[state=active]:to-[#80967D] data-[state=active]:text-white"
-            >
-              Assessments
-            </TabsTrigger>
-            <TabsTrigger
-              value="teams"
-              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#201C50] data-[state=active]:to-[#80967D] data-[state=active]:text-white"
-            >
-              Teams
-            </TabsTrigger>
-            <TabsTrigger
-              value="matrix"
-              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#201C50] data-[state=active]:to-[#80967D] data-[state=active]:text-white"
-            >
-              Matrix View
-            </TabsTrigger>
-            <TabsTrigger
-              value="settings"
-              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#201C50] data-[state=active]:to-[#80967D] data-[state=active]:text-white"
-            >
-              Settings
-            </TabsTrigger>
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-4">
+          <TabsList className="flex flex-wrap justify-center gap-2 bg-white/90 backdrop-blur-sm shadow-md rounded-xl p-2">
+            {["assessments", "teams", "matrix", "settings"].map((tab) => (
+              <TabsTrigger
+                key={tab}
+                value={tab}
+                className="flex-1 min-w-[80px] sm:min-w-[100px] py-2 px-3 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#201C50] data-[state=active]:to-[#80967D] data-[state=active]:text-white hover:bg-gray-100/50 transition-all duration-200"
+              >
+                {tab === "matrix" ? "Matrix View" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          <TabsContent value="assessments" className="space-y-6">
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <TabsContent value="assessments" className="space-y-4">
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
+                <CardTitle className="text-lg sm:text-xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
                   Assessment Management
                 </CardTitle>
-                <CardDescription className="text-lg text-gray-600">
+                <CardDescription className="text-sm sm:text-base text-gray-600">
                   Manage all 360 assessments, view progress, and access detailed reports
                 </CardDescription>
               </CardHeader>
@@ -412,13 +465,13 @@ export default function AdminDashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow className="border-b-2 border-gray-200">
-                        <TableHead className="font-bold text-[#201C50]">Leader</TableHead>
-                        <TableHead className="font-bold text-[#201C50]">Status</TableHead>
-                        <TableHead className="font-bold text-[#201C50]">Progress</TableHead>
-                        <TableHead className="font-bold text-[#201C50]">Scores</TableHead>
-                        <TableHead className="font-bold text-[#201C50]">Profile</TableHead>
-                        <TableHead className="font-bold text-[#201C50]">Risk</TableHead>
-                        <TableHead className="font-bold text-[#201C50]">Actions</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Leader</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Status</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Progress</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm hidden md:table-cell">Scores</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm hidden md:table-cell">Profile</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Risk</TableHead>
+                        <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -426,68 +479,68 @@ export default function AdminDashboard() {
                         <TableRow key={assessment.id} className="hover:bg-gray-50/80 transition-colors">
                           <TableCell>
                             <div>
-                              <div className="font-medium text-[#201C50]">{assessment.leaderName}</div>
-                              <div className="text-sm text-gray-500">{assessment.leaderEmail}</div>
+                              <div className="font-medium text-[#201C50] text-sm">{assessment.leaderName}</div>
+                              <div className="text-xs text-gray-500">{assessment.leaderEmail}</div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge className={getStatusColor(assessment.status)}>{assessment.status}</Badge>
+                            <Badge className={`${getStatusColor(assessment.status)} text-xs`}>{assessment.status}</Badge>
                           </TableCell>
                           <TableCell>
-                            <div className="space-y-2">
-                              <div className="text-sm font-medium">
-                                {assessment.ratingsReceived}/{assessment.ratingsNeeded} ratings
+                            <div className="space-y-1">
+                              <div className="text-xs font-medium">
+                                {assessment.ratingsReceived}/{assessment.ratingsNeeded}
                               </div>
                               <Progress
                                 value={(assessment.ratingsReceived / assessment.ratingsNeeded) * 100}
-                                className="w-24 h-2"
+                                className="w-20 h-1.5"
                               />
                               {assessment.daysRemaining > 0 && (
-                                <div className="text-xs text-gray-500">{assessment.daysRemaining} days left</div>
+                                <div className="text-xs text-gray-500">{assessment.daysRemaining} days</div>
                               )}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             {assessment.strategicScore && assessment.leadScore ? (
-                              <div className="text-sm">
-                                <div className="font-medium">Strategic: {assessment.strategicScore}</div>
-                                <div className="font-medium">L.E.A.D.: {assessment.leadScore}</div>
+                              <div className="text-xs">
+                                <div>Strategic: {assessment.strategicScore}</div>
+                                <div>L.E.A.D.: {assessment.leadScore}</div>
                               </div>
                             ) : (
-                              <span className="text-gray-400 italic">Pending</span>
+                              <span className="text-gray-400 italic text-xs">Pending</span>
                             )}
                           </TableCell>
-                          <TableCell>
-                            <div className="text-sm max-w-32 font-medium">{assessment.profile}</div>
+                          <TableCell className="hidden md:table-cell">
+                            <div className="text-xs max-w-28 font-medium">{assessment.profile}</div>
                           </TableCell>
                           <TableCell>
-                            <Badge className={getRiskColor(assessment.risk)}>{assessment.risk}</Badge>
+                            <Badge className={`${getRiskColor(assessment.risk)} text-xs`}>{assessment.risk}</Badge>
                           </TableCell>
                           <TableCell>
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-1">
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-transparent"
+                                className="p-1.5 sm:p-2"
                                 onClick={() => handleViewAssessment(assessment)}
                               >
-                                <Eye className="w-4 h-4" />
+                                <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                               </Button>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-transparent"
+                                className="p-1.5 sm:p-2"
                                 onClick={() => handleEditAssessment(assessment)}
                               >
-                                <Edit className="w-4 h-4" />
+                                <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                               </Button>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-transparent"
+                                className="p-1.5 sm:p-2"
                                 onClick={() => handleSendEmail(assessment)}
                               >
-                                <Mail className="w-4 h-4" />
+                                <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
                               </Button>
                             </div>
                           </TableCell>
@@ -500,72 +553,67 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="teams" className="space-y-6">
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <TabsContent value="teams" className="space-y-4">
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
+                <CardTitle className="text-lg sm:text-xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
                   Team Management
                 </CardTitle>
-                <CardDescription className="text-lg text-gray-600">
+                <CardDescription className="text-sm sm:text-base text-gray-600">
                   Create and manage team assessments with shared matrix views
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <Button
-                    className="bg-gradient-to-r from-[#EDA820] to-[#EC5A29] hover:from-[#EDA820]/90 hover:to-[#EC5A29]/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                    className="bg-gradient-to-r from-[#EDA820] to-[#EC5A29] hover:from-[#EDA820]/90 hover:to-[#EC5A29]/90 text-xs sm:text-sm"
                     onClick={() => setIsCreateTeamDialogOpen(true)}
                   >
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-4 h-4 mr-1 sm:mr-2" />
                     Create Team
                   </Button>
-
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow className="border-b-2 border-gray-200">
-                          <TableHead className="font-bold text-[#201C50]">Team Name</TableHead>
-                          <TableHead className="font-bold text-[#201C50]">Team Key</TableHead>
-                          <TableHead className="font-bold text-[#201C50]">Members</TableHead>
-                          <TableHead className="font-bold text-[#201C50]">Completed</TableHead>
-                          <TableHead className="font-bold text-[#201C50]">Actions</TableHead>
+                          <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Team Name</TableHead>
+                          <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Team Key</TableHead>
+                          <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Members</TableHead>
+                          <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Completed</TableHead>
+                          <TableHead className="font-bold text-[#201C50] text-xs sm:text-sm">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {teams.map((team) => (
                           <TableRow key={team.id} className="hover:bg-gray-50/80 transition-colors">
-                            <TableCell className="font-medium text-[#201C50]">{team.name}</TableCell>
+                            <TableCell className="font-medium text-[#201C50] text-xs sm:text-sm">{team.name}</TableCell>
                             <TableCell>
-                              <code className="bg-gradient-to-r from-gray-100 to-gray-200 px-3 py-2 rounded-lg text-sm font-mono shadow-sm">
-                                {team.key}
-                              </code>
+                              <code className="bg-gray-100 px-2 py-1 rounded text-xs font-mono">{team.key}</code>
                             </TableCell>
-                            <TableCell className="font-medium">{team.members}</TableCell>
+                            <TableCell className="font-medium text-xs sm:text-sm">{team.members}</TableCell>
                             <TableCell>
-                              <div className="flex items-center space-x-3">
-                                <span className="font-medium">
-                                  {team.completed}/{team.members}
-                                </span>
-                                <Progress value={(team.completed / team.members) * 100} className="w-24 h-2" />
+                              <div className="flex items-center space-x-2">
+                                <span className="font-medium text-xs sm:text-sm">{team.completed}/{team.members}</span>
+                                <Progress value={(team.completed / team.members) * 100} className="w-20 h-1.5" />
                               </div>
                             </TableCell>
                             <TableCell>
-                              <div className="flex space-x-2">
+                              <div className="flex space-x-1">
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-transparent"
+                                  className="p-1.5 sm:p-2"
                                   onClick={() => handleViewTeam(team)}
                                 >
-                                  <Eye className="w-4 h-4" />
+                                  <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </Button>
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-transparent"
+                                  className="p-1.5 sm:p-2"
                                   onClick={() => handleEditTeam(team)}
                                 >
-                                  <Edit className="w-4 h-4" />
+                                  <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </Button>
                               </div>
                             </TableCell>
@@ -579,13 +627,13 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="matrix" className="space-y-6">
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <TabsContent value="matrix" className="space-y-4">
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
+                <CardTitle className="text-lg sm:text-xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
                   Leadership Matrix Overview
                 </CardTitle>
-                <CardDescription className="text-lg text-gray-600">
+                <CardDescription className="text-sm sm:text-base text-gray-600">
                   View all leaders plotted on the Strategic Execution vs L.E.A.D.Better matrix
                 </CardDescription>
               </CardHeader>
@@ -605,121 +653,53 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="development" className="space-y-6">
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <TabsContent value="settings" className="space-y-4">
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
-                  Development Recommendations
-                </CardTitle>
-                <CardDescription className="text-lg text-gray-600">
-                  HR/OD professional guidance for each team member based on their matrix placement
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {assessments
-                    .filter((a) => a.strategicScore !== null && a.leadScore !== null)
-                    .map((assessment) => (
-                      <div key={assessment.id} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-4">
-                          <div>
-                            <h3 className="font-medium text-[#201C50]">{assessment.leaderName}</h3>
-                            <p className="text-sm text-gray-600">{assessment.profile}</p>
-                          </div>
-                          <Badge className={getRiskColor(assessment.risk)}>{assessment.risk} Risk</Badge>
-                        </div>
-                        <div className="space-y-3">
-                          <div>
-                            <h4 className="font-medium text-sm mb-2">Recommended Actions:</h4>
-                            {assessment.risk === "Low" ? (
-                              <ul className="text-sm text-gray-600 space-y-1">
-                                <li>• Position for larger enterprise impact roles</li>
-                                <li>• Assign enterprise-level mentors or sponsors</li>
-                                <li>• Leverage as mentor for other leaders</li>
-                                <li>• Include in succession planning discussions</li>
-                              </ul>
-                            ) : (
-                              <ul className="text-sm text-gray-600 space-y-1">
-                                <li>• Business skills training (finance, operations, strategic thinking)</li>
-                                <li>• Partner with strong business leader as mentor</li>
-                                <li>• Assign stretch projects tied to business KPIs</li>
-                                <li>• Retain & encourage cultural strengths</li>
-                              </ul>
-                            )}
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button
-                              size="sm"
-                              className="bg-[#80967D] hover:bg-[#80967D]/90"
-                              onClick={() => handleCreateDevelopmentPlan(assessment)}
-                            >
-                              Create Development Plan
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleScheduleCoachingSession(assessment)}
-                            >
-                              Schedule Coaching Session
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="settings" className="space-y-6">
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
+                <CardTitle className="text-lg sm:text-xl bg-gradient-to-r from-[#201C50] to-[#80967D] bg-clip-text text-transparent">
                   System Settings
                 </CardTitle>
-                <CardDescription className="text-lg text-gray-600">
+                <CardDescription className="text-sm sm:text-base text-gray-600">
                   Configure system defaults and manage user accounts
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-8">
-                  <div className="bg-gradient-to-r from-[#F3EDDB]/30 to-white p-6 rounded-xl border">
-                    <h3 className="text-xl font-bold text-[#201C50] mb-6">Assessment Defaults</h3>
-                    <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-[#F3EDDB]/30 to-white p-4 rounded-lg border">
+                    <h3 className="text-base sm:text-lg font-bold text-[#201C50] mb-3">Assessment Defaults</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-3">Default Assessment Period</label>
-                        <select className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-[#201C50] transition-colors">
+                        <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">Default Assessment Period</label>
+                        <select className="w-full p-2 border-2 border-gray-200 rounded-lg focus:border-[#201C50] text-sm">
                           <option>30 days</option>
                           <option>60 days</option>
                           <option>90 days</option>
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-3">Minimum Raters Required</label>
+                        <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">Minimum Raters Required</label>
                         <input
                           type="number"
                           defaultValue={5}
-                          className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-[#201C50] transition-colors"
+                          className="w-full p-2 border-2 border-gray-200 rounded-lg focus:border-[#201C50] text-sm"
                         />
                       </div>
                     </div>
                   </div>
-
-                  <div className="bg-gradient-to-r from-[#F3EDDB]/30 to-white p-6 rounded-xl border">
-                    <h3 className="text-xl font-bold text-[#201C50] mb-6">Reminder Settings</h3>
-                    <div className="space-y-4">
-                      <label className="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" defaultChecked className="w-5 h-5 text-[#201C50] rounded" />
-                        <span className="font-medium">Send automatic reminders every 30 days</span>
+                  <div className="bg-gradient-to-r from-[#F3EDDB]/30 to-white p-4 rounded-lg border">
+                    <h3 className="text-base sm:text-lg font-bold text-[#201C50] mb-3">Reminder Settings</h3>
+                    <div className="space-y-3">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" defaultChecked className="w-4 h-4 text-[#201C50] rounded" />
+                        <span className="text-xs sm:text-sm">Send automatic reminders every 30 days</span>
                       </label>
-                      <label className="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" defaultChecked className="w-5 h-5 text-[#201C50] rounded" />
-                        <span className="font-medium">Send completion notifications</span>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" defaultChecked className="w-4 h-4 text-[#201C50] rounded" />
+                        <span className="text-xs sm:text-sm">Send completion notifications</span>
                       </label>
                     </div>
                   </div>
-
-                  <Button className="bg-gradient-to-r from-[#201C50] to-[#80967D] hover:from-[#201C50]/90 hover:to-[#80967D]/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 px-8 py-3">
+                  <Button className="bg-gradient-to-r from-[#201C50] to-[#80967D] hover:from-[#201C50]/90 hover:to-[#80967D]/90 text-sm">
                     Save Settings
                   </Button>
                 </div>
@@ -729,7 +709,7 @@ export default function AdminDashboard() {
         </Tabs>
       </div>
 
-      {/* Dialogs for Assessments */}
+      {/* Dialogs */}
       <ViewAssessmentDialog
         open={isViewDialogOpen}
         onOpenChange={setIsViewDialogOpen}
@@ -762,8 +742,6 @@ export default function AdminDashboard() {
         onOpenChange={setIsCreateAssessmentDialogOpen}
         onSave={handleAddNewAssessment}
       />
-
-      {/* Dialogs for Teams */}
       <ViewTeamDialog
         open={isViewTeamDialogOpen}
         onOpenChange={setIsViewTeamDialogOpen}

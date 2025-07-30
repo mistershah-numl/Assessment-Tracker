@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Users, BarChart3, Download, Plus, Eye } from "lucide-react"
+import { Users, BarChart3, Download, Plus, Eye, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { MatrixVisualization } from "@/components/matrix-visualization"
 
@@ -16,6 +16,7 @@ export default function My360Dashboard() {
   const [newRaterEmail, setNewRaterEmail] = useState("")
   const [newRaterName, setNewRaterName] = useState("")
   const [newRaterRole, setNewRaterRole] = useState("")
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Mock data for the leader's assessment
   const myAssessment = {
@@ -48,34 +49,52 @@ export default function My360Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b">
-        <div className="px-6 py-4">
+      <header className="bg-white border-b shadow-sm sticky top-0 z-50">
+        <div className="px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <Link href="/" className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#201C50] to-[#EDA820] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#201C50] to-[#EDA820] rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold">L</span>
                 </div>
-                <span className="font-bold text-[#201C50]">L.E.A.D.Better 360</span>
+                <span className="font-bold text-[#201C50]">LEAD Better</span>
               </Link>
               <Badge className="bg-[#80967D] text-white">My Assessment</Badge>
             </div>
-            <div className="flex items-center space-x-4">
+            {/* Desktop Actions */}
+            <div className="hidden sm:flex items-center space-x-4">
               {showResults && (
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="text-sm">
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Report
+                </Button>
+              )}
+            </div>
+            {/* Mobile Menu Button */}
+            <button className="sm:hidden text-[#201C50] focus:outline-none" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="sm:hidden bg-white shadow-md p-4">
+            <div className="flex flex-col space-y-4">
+              {showResults && (
+                <Button variant="outline" size="sm" className="w-full justify-center text-sm" onClick={() => setIsMenuOpen(false)}>
                   <Download className="w-4 h-4 mr-2" />
                   Download Report
                 </Button>
               )}
             </div>
           </div>
-        </div>
+        )}
       </header>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Assessment Status */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <Card className="shadow-md hover:shadow-lg transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Ratings Received</CardTitle>
               <Users className="h-4 w-4 text-[#201C50]" />
@@ -92,7 +111,7 @@ export default function My360Dashboard() {
 
           {showResults && (
             <>
-              <Card>
+              <Card className="shadow-md hover:shadow-lg transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Strategic Execution</CardTitle>
                   <BarChart3 className="h-4 w-4 text-[#EDA820]" />
@@ -103,7 +122,7 @@ export default function My360Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-md hover:shadow-lg transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">L.E.A.D.Better Score</CardTitle>
                   <Users className="h-4 w-4 text-[#F2789D]" />
@@ -121,56 +140,54 @@ export default function My360Dashboard() {
           /* Results View */
           <div className="space-y-6">
             {/* Matrix Placement */}
-            <Card>
+            <Card className="shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#201C50]">Your Leadership Profile</CardTitle>
                 <CardDescription>Your placement on the Strategic Execution vs L.E.A.D.Better matrix</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <MatrixVisualization
+                    leaders={[
+                      {
+                        name: "You",
+                        strategicScore: myAssessment.strategicScore,
+                        leadScore: myAssessment.leadScore,
+                        profile: myAssessment.profile,
+                        risk: myAssessment.risk,
+                      },
+                    ]}
+                    highlightLeader="You"
+                  />
+                </div>
+                <div className="space-y-4">
                   <div>
-                    <MatrixVisualization
-                      leaders={[
-                        {
-                          name: "You",
-                          strategicScore: myAssessment.strategicScore,
-                          leadScore: myAssessment.leadScore,
-                          profile: myAssessment.profile,
-                          risk: myAssessment.risk,
-                        },
-                      ]}
-                      highlightLeader="You"
-                    />
+                    <h3 className="font-medium text-[#201C50] mb-2">Your Profile</h3>
+                    <Badge className="bg-green-100 text-green-800 mb-3">{myAssessment.profile}</Badge>
+                    <p className="text-sm text-gray-600">
+                      You demonstrate strong strategic leadership while building positive culture and employee
+                      experience. You're well-positioned for senior leadership roles.
+                    </p>
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="font-medium text-[#201C50] mb-2">Your Profile</h3>
-                      <Badge className="bg-green-100 text-green-800 mb-3">{myAssessment.profile}</Badge>
-                      <p className="text-sm text-gray-600">
-                        You demonstrate strong strategic leadership while building positive culture and employee
-                        experience. You're well-positioned for senior leadership roles.
-                      </p>
-                    </div>
 
-                    <div>
-                      <h3 className="font-medium text-[#201C50] mb-2">L.E.A.D. Breakdown</h3>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm">Listen</span>
-                          <span className="text-sm font-medium">{myAssessment.lScore}/3</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm">Empathize</span>
-                          <span className="text-sm font-medium">{myAssessment.eScore}/3</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm">Analyze</span>
-                          <span className="text-sm font-medium">{myAssessment.aScore}/3</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm">Delegate</span>
-                          <span className="text-sm font-medium">{myAssessment.dScore}/3</span>
-                        </div>
+                  <div>
+                    <h3 className="font-medium text-[#201C50] mb-2">L.E.A.D. Breakdown</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Listen</span>
+                        <span className="text-sm font-medium">{myAssessment.lScore}/3</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Empathize</span>
+                        <span className="text-sm font-medium">{myAssessment.eScore}/3</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Analyze</span>
+                        <span className="text-sm font-medium">{myAssessment.aScore}/3</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Delegate</span>
+                        <span className="text-sm font-medium">{myAssessment.dScore}/3</span>
                       </div>
                     </div>
                   </div>
@@ -179,7 +196,7 @@ export default function My360Dashboard() {
             </Card>
 
             {/* Development Focus */}
-            <Card>
+            <Card className="shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#201C50]">Your Development Focus</CardTitle>
                 <CardDescription>Areas to focus on for continued leadership growth</CardDescription>
@@ -212,7 +229,7 @@ export default function My360Dashboard() {
         ) : (
           /* Pending Results View */
           <div className="space-y-6">
-            <Card>
+            <Card className="shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#201C50]">Assessment in Progress</CardTitle>
                 <CardDescription>
@@ -220,27 +237,25 @@ export default function My360Dashboard() {
                   are received.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-[#EDA820]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="w-8 h-8 text-[#EDA820]" />
-                  </div>
-                  <h3 className="text-lg font-medium text-[#201C50] mb-2">Collecting Feedback</h3>
-                  <p className="text-gray-600 mb-4">
-                    {myAssessment.ratingsReceived} of {myAssessment.ratingsNeeded} minimum ratings received
-                  </p>
-                  <Progress
-                    value={(myAssessment.ratingsReceived / myAssessment.ratingsNeeded) * 100}
-                    className="w-48 mx-auto"
-                  />
+              <CardContent className="text-center py-6 sm:py-8">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#EDA820]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 sm:w-10 sm:h-10 text-[#EDA820]" />
                 </div>
+                <h3 className="text-lg font-medium text-[#201C50] mb-2">Collecting Feedback</h3>
+                <p className="text-gray-600 mb-4">
+                  {myAssessment.ratingsReceived} of {myAssessment.ratingsNeeded} minimum ratings received
+                </p>
+                <Progress
+                  value={(myAssessment.ratingsReceived / myAssessment.ratingsNeeded) * 100}
+                  className="w-40 sm:w-48 mx-auto"
+                />
               </CardContent>
             </Card>
           </div>
         )}
 
         {/* Rater Management */}
-        <Card className="mt-6">
+        <Card className="mt-6 shadow-md">
           <CardHeader>
             <CardTitle className="text-[#201C50]">Manage Your Raters</CardTitle>
             <CardDescription>
@@ -269,7 +284,7 @@ export default function My360Dashboard() {
               {/* Add New Rater */}
               <div>
                 <h3 className="font-medium mb-4">Request Additional Rater</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                   <div>
                     <Label htmlFor="raterName">Name</Label>
                     <Input
@@ -278,6 +293,7 @@ export default function My360Dashboard() {
                       onChange={(e) => setNewRaterName(e.target.value)}
                       placeholder="Enter rater's name"
                       disabled={pendingRaters.length >= 3}
+                      className="text-sm"
                     />
                   </div>
                   <div>
@@ -289,6 +305,7 @@ export default function My360Dashboard() {
                       onChange={(e) => setNewRaterEmail(e.target.value)}
                       placeholder="Enter rater's email"
                       disabled={pendingRaters.length >= 3}
+                      className="text-sm"
                     />
                   </div>
                   <div>
@@ -297,7 +314,7 @@ export default function My360Dashboard() {
                       id="raterRole"
                       value={newRaterRole}
                       onChange={(e) => setNewRaterRole(e.target.value)}
-                      className="w-full p-2 border rounded-md"
+                      className="w-full p-2 border rounded-md text-sm"
                       disabled={pendingRaters.length >= 3}
                     >
                       <option value="">Select relationship</option>
@@ -314,7 +331,7 @@ export default function My360Dashboard() {
                 <Button
                   onClick={handleAddRater}
                   disabled={!newRaterName || !newRaterEmail || !newRaterRole || pendingRaters.length >= 3}
-                  className="bg-[#80967D] hover:bg-[#80967D]/90"
+                  className="bg-[#80967D] hover:bg-[#80967D]/90 text-sm w-full sm:w-auto"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Request Rater Approval
@@ -331,9 +348,9 @@ export default function My360Dashboard() {
         </Card>
 
         {/* Privacy Notice */}
-        <Card className="mt-6 bg-[#F3EDDB]/30">
+        <Card className="mt-6 bg-[#F3EDDB]/30 shadow-md">
           <CardContent className="pt-6">
-            <div className="flex items-start space-x-3">
+            <div className="flex flex-col sm:flex-row items-start space-y-3 sm:space-y-0 sm:space-x-3">
               <Eye className="w-5 h-5 text-[#80967D] mt-0.5" />
               <div>
                 <h3 className="font-medium text-[#201C50] mb-2">Your Privacy is Protected</h3>
