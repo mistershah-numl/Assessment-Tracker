@@ -255,11 +255,10 @@ export default function DemoRequestPage() {
                     <li>• Live demonstration of the assessment process</li>
                     <li>• Matrix visualization with sample data</li>
                     <li>• Role-based dashboard views</li>
-                    <li>• Development recommendations in action</li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-medium mb-2">Strategic Discussion</h3>
+                  <h3 className="font-medium mb-2">Next Steps:  Book A Strategic Discussion</h3>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• Your specific leadership challenges</li>
                     <li>• Implementation best practices</li>
